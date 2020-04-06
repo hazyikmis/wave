@@ -1,0 +1,19 @@
+//ADD USER
+POST http://localhost:3002/api/users/register
+content-type: application/json
+
+{
+    "email": "halo2@yahoo.com",
+    "password": "qqqwww",
+    "name": "Halil",
+    "lastname": "Azy"
+}
+###
+//ADD USER
+POST http://localhost:3002/api/users/login
+content-type: application/json
+
+{
+    "email": "halo@yahoo.com",
+    "password": "qqqwww"
+}
