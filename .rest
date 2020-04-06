@@ -9,7 +9,7 @@ content-type: application/json
     "lastname": "Azy"
 }
 ###
-//ADD USER
+//USER LOGIN
 POST http://localhost:3002/api/users/login
 content-type: application/json
 
