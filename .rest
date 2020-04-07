@@ -3,10 +3,11 @@ POST http://localhost:3002/api/users/register
 content-type: application/json
 
 {
-    "email": "halo2@yahoo.com",
+    "email": "ad@min.com",
     "password": "qqqwww",
-    "name": "Halil",
-    "lastname": "Azy"
+    "name": "Admin",
+    "lastname": "Istrador",
+    "role": 1
 }
 
 ###
@@ -20,6 +21,16 @@ content-type: application/json
 }
 
 ###
+//USER LOGIN (ADMIN)
+POST http://localhost:3002/api/users/login
+content-type: application/json
+
+{
+    "email": "ad@min.com",
+    "password": "qqqwww"
+}
+
+###
 //USER AUTH
 GET http://localhost:3002/api/users/auth
 content-type: application/json
@@ -29,4 +40,18 @@ content-type: application/json
 ###
 //USER LOGOUT
 GET http://localhost:3002/api/user/logout
+content-type: application/json
+
+###
+//NEW BRAND ADDING
+POST http://localhost:3002/api/product/brand
+content-type: application/json
+
+{
+    "name": "Pilastik, sert ama"
+}
+
+###
+//GET ALL BRANDS
+GET http://localhost:3002/api/product/brands
 content-type: application/json

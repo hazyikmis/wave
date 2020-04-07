@@ -19,9 +19,11 @@ app.use(cookieParser());
 
 // Models
 const { User } = require("./models/user");
+const { Brand } = require("./models/brand");
 
 // Middlewares
 const { auth } = require("./middleware/auth");
+const { admin } = require("./middleware/admin");
 
 app.get("/", (req, res) => {
   res.send("Hello World");
@@ -98,6 +100,29 @@ app.get("/api/user/logout", auth, (req, res) => {
       return res.status(200).send({ success: true });
     }
   );
+});
+
+//============================
+//        BRAND
+//============================
+
+app.post("/api/product/brand", auth, admin, (req, res) => {
+  const brand = new Brand(req.body);
+
+  brand.save((err, newBrand) => {
+    if (err) return res.json({ success: false, err });
+    res.status(200).json({
+      success: true,
+      brand: newBrand,
+    });
+  });
+});
+
+app.get("/api/product/brands", (req, res) => {
+  Brand.find({}, (err, brands) => {
+    if (err) return res.status(400).send(err);
+    res.status(200).send(brands);
+  });
 });
 
 const port = process.env.SERVER_PORT || 3002;

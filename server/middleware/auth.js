@@ -4,7 +4,7 @@ const auth = (req, res, next) => {
   //check the token is ok
   let token = req.cookies.wave_auth;
 
-  console.log(token);
+  //console.log(token);
 
   User.findByToken(token, (err, user) => {
     if (err) throw err;
