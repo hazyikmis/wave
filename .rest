@@ -55,3 +55,17 @@ content-type: application/json
 //GET ALL BRANDS
 GET http://localhost:3002/api/product/brands
 content-type: application/json
+
+###
+//NEW WOOD ADDING
+POST http://localhost:3002/api/product/wood
+content-type: application/json
+
+{
+    "name": "alder"
+}
+
+###
+//GET ALL WOODS
+GET http://localhost:3002/api/product/woods
+content-type: application/json
