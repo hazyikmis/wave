@@ -8,6 +8,7 @@ content-type: application/json
     "name": "Halil",
     "lastname": "Azy"
 }
+
 ###
 //USER LOGIN
 POST http://localhost:3002/api/users/login
@@ -17,3 +18,9 @@ content-type: application/json
     "email": "halo@yahoo.com",
     "password": "qqqwww"
 }
+
+###
+//USER AUTH
+GET http://localhost:3002/api/users/auth
+content-type: application/json
+//Authorization: token "xxx"

@@ -20,6 +20,9 @@ app.use(cookieParser());
 // Models
 const { User } = require("./models/user");
 
+// Middlewares
+const { auth } = require("./middleware/auth");
+
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
@@ -27,6 +30,23 @@ app.get("/", (req, res) => {
 //============================
 //        USERS
 //============================
+
+//if the users tries to post something, then this route helps
+//us to check that if user authenticated to do so
+app.get("/api/users/auth", auth, (req, res) => {
+  res.status(200).json({
+    //user: req.user
+    isAdmin: req.user.role === 0 ? false : true,
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,
+    lastname: req.user.lastname,
+    role: req.user.role,
+    cart: req.user.cart,
+    history: req.user.history,
+  });
+});
+
 app.post("/api/users/register", (req, res) => {
   const user = new User(req.body);
 
