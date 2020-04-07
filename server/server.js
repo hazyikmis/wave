@@ -21,6 +21,7 @@ app.use(cookieParser());
 const { User } = require("./models/user");
 const { Brand } = require("./models/brand");
 const { Wood } = require("./models/wood");
+const { Product } = require("./models/product");
 
 // Middlewares
 const { auth } = require("./middleware/auth");
@@ -127,7 +128,7 @@ app.get("/api/product/brands", (req, res) => {
 });
 
 //============================
-//        WOODS
+//        WOOD
 //============================
 
 app.post("/api/product/wood", auth, admin, (req, res) => {
@@ -137,7 +138,7 @@ app.post("/api/product/wood", auth, admin, (req, res) => {
     if (err) return res.json({ success: false, err });
     res.status(200).json({
       success: true,
-      wood: newWood,
+      brand: newWood,
     });
   });
 });
@@ -147,6 +148,69 @@ app.get("/api/product/woods", (req, res) => {
     if (err) return res.status(400).send(err);
     res.status(200).send(woods);
   });
+});
+
+//============================
+//        PRODUCTS
+//============================
+
+app.post("/api/product/article", auth, admin, (req, res) => {
+  const product = new Product(req.body);
+
+  product.save((err, newProduct) => {
+    if (err) return res.json({ success: false, err });
+    res.status(200).json({
+      success: true,
+      product: newProduct,
+    });
+  });
+});
+
+//by arrival : /api/product/articles?sortBy=createdAt&order=desc&limit=4
+//by most sell : /api/product/articles?sortBy=sold&order=desc&limit=4
+
+app.get("/api/product/articles", (req, res) => {
+  let order = req.query.order ? req.query.order : "asc";
+  let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
+  let limit = req.query.limit ? parseInt(req.query.limit) : 100;
+  let skip = req.query.skip ? req.query.skip : 0;
+
+  // Product.find({}, (err, products) => {
+  //   if (err) return res.status(400).send(err);
+  //   res.status(200).send(products);
+  // });
+
+  Product.find({})
+    .populate("brand")
+    .populate("wood")
+    .sort([[sortBy, order]])
+    .limit(limit)
+    .exec((err, products) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).send(products);
+    });
+});
+
+app.get("/api/product/articles_by_id", (req, res) => {
+  let type = req.query.type;
+  let items = req.query.id;
+
+  if (type === "array") {
+    let ids = req.query.id.split(",");
+    items = [];
+    items = ids.map((id) => {
+      return mongoose.Types.ObjectId(id);
+    });
+  }
+
+  //Product.find({ _id: { $in: items } }).exec((err, products) => {
+  Product.find({ _id: { $in: items } })
+    .populate("brand")
+    .populate("wood")
+    .exec((err, products) => {
+      if (err) return res.status(400).send(err);
+      return res.status(200).send(products);
+    });
 });
 
 const port = process.env.SERVER_PORT || 3002;

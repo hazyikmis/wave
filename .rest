@@ -69,3 +69,46 @@ content-type: application/json
 //GET ALL WOODS
 GET http://localhost:3002/api/product/woods
 content-type: application/json
+
+###
+//NEW PRODUCT ADDING
+POST http://localhost:3002/api/product/article
+content-type: application/json
+
+{
+    "name": "A2404",
+    "description": "Super awesome guitar, super jazzy",
+    "price": "2000",
+    "brand": "5b2c11d2d37177aedfd6d962",
+    "shipping": true,
+    "available": true,
+    "wood": "5b2c1c0981e781b44909627d",
+    "frets": 24,
+    "publish": true
+}
+
+###
+//GET ALL PRODUCTS
+GET http://localhost:3002/api/product/articles
+content-type: application/json
+
+###
+//GET ARRAY OF PRODUCTS - NEW ARRIVALS
+GET http://localhost:3002/api/product/articles?sortBy=createdAt&order=desc&limit=4
+content-type: application/json
+
+###
+//GET ARRAY OF PRODUCTS - MOST SELLS
+GET http://localhost:3002/api/product/articles?sortBy=sold&order=desc&limit=4
+content-type: application/json
+
+###
+//GET ARRAY OF PRODUCTS BY ID
+GET http://localhost:3002/api/product/articles_by_id?type=array&id=5b2d3648ca6a03cd33af924c,5b2d39d97d75e2cdcb31cf0c,5b2d39407d75e2cdcb31cf08
+content-type: application/json
+
+###
+//GET SINGLE PRODUCT BY ID
+GET http://localhost:3002/api/product/articles_by_id?id=5b2d3648ca6a03cd33af924c
+//GET http://localhost:3002/api/product/articles_by_id?type=single&id=5b2d3648ca6a03cd33af924c
+content-type: application/json
