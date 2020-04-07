@@ -24,3 +24,9 @@ content-type: application/json
 GET http://localhost:3002/api/users/auth
 content-type: application/json
 //Authorization: token "xxx"
+//PLEASE CHECK FROM SETTINGS: rest-client.rememberCookiesForSubsequentRequests: Save cookies from Set-Cookie header in response and use for subsequent requests. (Default is true)
+
+###
+//USER LOGOUT
+GET http://localhost:3002/api/user/logout
+content-type: application/json
