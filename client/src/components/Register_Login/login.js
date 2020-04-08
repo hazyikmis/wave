@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 
 import { FormField } from "../utils/Form/formField";
 import { update, generateData, isFormValid } from "../utils/Form/formActions";
+import { loginUser } from "../../actions/user_actions";
+import { withRouter } from "react-router-dom";
 
 class Login extends Component {
   state = {
@@ -58,7 +60,18 @@ class Login extends Component {
 
     if (formIsValid) {
       let dataToSubmit = generateData(this.state.formdata, "login");
-      console.log(dataToSubmit);
+      //console.log(dataToSubmit);
+      this.props.dispatch(loginUser(dataToSubmit)).then((response) => {
+        if (response.payload.loginSuccess) {
+          //console.log(response.payload);
+          //in order to use "props.history.push" we need to access "props", so we added & used "withRouter"
+          this.props.history.push("/user/dashboard");
+        } else {
+          this.setState({
+            formError: true,
+          });
+        }
+      });
     } else {
       this.setState({
         formError: true,
@@ -93,4 +106,5 @@ class Login extends Component {
   }
 }
 
-export default connect()(Login);
+//in order to inject all props to Login we wrapped Login with "withRouter"
+export default connect()(withRouter(Login));
