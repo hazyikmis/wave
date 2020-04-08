@@ -6,7 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server-start": "node server/server.js",
-    "server-start-dev": "nodemon server/server.js"
+    "server-start-dev": "nodemon server/server.js",
+    "client-start": "npm run start --prefix client",
+    "client-start-dev": "npm run start --prefix client",
+    "all-start": "concurrently \"npm run server-start\" \"npm run client-start\"",
+    "all-start-dev": "concurrently \"npm run server-start-dev\" \"npm run client-start-dev\""
   },
   "author": "",
   "license": "ISC",
