@@ -10,6 +10,8 @@ import Register from "./components/Register_Login/register";
 
 import { UserDashboard } from "./components/User";
 
+import Shop from "./components/Shop";
+
 //for private routes Auth(ComponentName, true)
 //for in-between routes Auth(ComponentName, false)
 //fro public routes Auth(ComponentName, null)
@@ -30,6 +32,7 @@ const Routes = () => {
           exact
           component={Auth(RegisterLogin, false)}
         />
+        <Route path="/shop" exact component={Auth(Shop, null)} />
         <Route path="/" exact component={Auth(Home, null)} />
       </Switch>
     </Layout>

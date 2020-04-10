@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import {
   getProductsBySell,
   getProductsByArrival,
-} from "../../actions/prducts_actions";
+} from "../../actions/products_actions";
 
 import { CardBlock } from "../utils/card_block";
 
