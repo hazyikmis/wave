@@ -6,7 +6,9 @@ import { getBrands, getWoods } from "../../actions/products_actions";
 
 import CollapsableCheckBoxList from "../utils/collapse_checkbox";
 
-import { frets } from "../utils/Form/fixed_categories";
+import { frets, prices } from "../utils/Form/fixed_categories";
+
+import CollapsableRadioButtonList from "../utils/collapse_radio";
 
 class Shop extends Component {
   state = {
@@ -26,12 +28,29 @@ class Shop extends Component {
     this.props.dispatch(getWoods());
   }
 
+  handlePrice = (filters) => {
+    let priceRange = [];
+
+    for (let key in prices) {
+      if (prices[key]._id === parseInt(filters, 10)) {
+        priceRange = prices[key].range;
+      }
+    }
+    return priceRange;
+  };
+
   handleFilters = (filters, category) => {
     //on every-click, "filters" contains the array of only selected brands or only selected frest or only selected woods
     //so, when handling all filters together we need to use state (until that moment, for this class we had not need any state)
     //console.log(filters, category);
     const newFilters = { ...this.state.filters };
     newFilters[category] = filters;
+
+    if (category === "price") {
+      let priceValues = this.handlePrice(filters);
+      newFilters[category] = priceValues;
+    }
+
     this.setState({
       filters: newFilters,
     });
@@ -44,7 +63,7 @@ class Shop extends Component {
 
     const products = this.props.products;
 
-    //BE CAREFUL: brands & woods comes from mongodb, but frets comes from mongodb-like fixed array of objects
+    //BE CAREFUL: brands & woods come from mongodb, but frets & prices come from mongodb-like fixed array of objects
     return (
       <div>
         <PageTop title="Browse products" />
@@ -73,6 +92,14 @@ class Shop extends Component {
                 list={products.woods}
                 handleFilters={(filters) =>
                   this.handleFilters(filters, "woods")
+                }
+              />
+              <CollapsableRadioButtonList
+                initState={true}
+                title="Price"
+                list={prices}
+                handleFilters={(filters) =>
+                  this.handleFilters(filters, "price")
                 }
               />
             </div>
