@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { PageTop } from "../utils/page_top";
 import { connect } from "react-redux";
 
-import { getBrands, getWoods } from "../../actions/products_actions";
+import {
+  getBrands,
+  getWoods,
+  getProductsToShop,
+} from "../../actions/products_actions";
 
 import CollapsableCheckBoxList from "../utils/collapse_checkbox";
 
@@ -16,9 +20,9 @@ class Shop extends Component {
     limit: 6,
     skip: 0,
     filters: {
-      brands: [],
+      brand: [],
       frets: [],
-      woods: [],
+      wood: [],
       price: [],
     },
   };
@@ -26,6 +30,10 @@ class Shop extends Component {
   componentDidMount() {
     this.props.dispatch(getBrands());
     this.props.dispatch(getWoods());
+
+    this.props.dispatch(
+      getProductsToShop(this.state.skip, this.state.limit, this.state.filters)
+    );
   }
 
   handlePrice = (filters) => {
@@ -37,6 +45,16 @@ class Shop extends Component {
       }
     }
     return priceRange;
+  };
+
+  showFilteredResults = (filters) => {
+    this.props
+      .dispatch(getProductsToShop(0, this.state.limit, filters))
+      .then(() => {
+        this.setState({
+          skip: 0,
+        });
+      });
   };
 
   handleFilters = (filters, category) => {
@@ -51,6 +69,8 @@ class Shop extends Component {
       newFilters[category] = priceValues;
     }
 
+    this.showFilteredResults(newFilters);
+
     this.setState({
       filters: newFilters,
     });
@@ -59,7 +79,7 @@ class Shop extends Component {
   };
 
   render() {
-    console.log(this.state.filters);
+    //console.log(this.state.filters);
 
     const products = this.props.products;
 
@@ -75,7 +95,7 @@ class Shop extends Component {
                 title="Brands"
                 list={products.brands}
                 handleFilters={(filters) =>
-                  this.handleFilters(filters, "brands")
+                  this.handleFilters(filters, "brand")
                 }
               />
               <CollapsableCheckBoxList
@@ -90,9 +110,7 @@ class Shop extends Component {
                 initState={false}
                 title="Woods"
                 list={products.woods}
-                handleFilters={(filters) =>
-                  this.handleFilters(filters, "woods")
-                }
+                handleFilters={(filters) => this.handleFilters(filters, "wood")}
               />
               <CollapsableRadioButtonList
                 initState={true}

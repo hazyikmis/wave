@@ -203,13 +203,50 @@ app.get("/api/product/articles_by_id", (req, res) => {
     });
   }
 
-  //Product.find({ _id: { $in: items } }).exec((err, products) => {
+  //Product.find({ _id:{ $in: items } }).exec((err, products) => {
   Product.find({ _id: { $in: items } })
     .populate("brand")
     .populate("wood")
     .exec((err, products) => {
       if (err) return res.status(400).send(err);
       return res.status(200).send(products);
+    });
+});
+
+app.post("/api/product/shop", (req, res) => {
+  //when calling this route from client/Shop/index.js, we are sending "paramsData"
+  let limit = req.body.limit ? parseInt(req.body.limit) : 100;
+  let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+  let order = req.body.order ? req.body.order : "desc";
+  let orderBy = req.body.orderBy ? req.body.orderBy : "_id";
+
+  let findArgs = {};
+  for (let key in req.body.filters) {
+    if (req.body.filters[key].length > 0) {
+      if (key === "price") {
+        findArgs[key] = {
+          $gte: req.body.filters[key][0],
+          $lte: req.body.filters[key][1],
+        };
+      } else {
+        findArgs[key] = req.body.filters[key];
+      }
+    }
+  }
+  console.log(findArgs);
+
+  Product.find(findArgs)
+    .populate("brand")
+    .populate("wood")
+    .sort([[orderBy, order]])
+    .skip(skip)
+    .limit(limit)
+    .exec((err, articles) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).json({
+        size: articles.length,
+        articles,
+      });
     });
 });
 

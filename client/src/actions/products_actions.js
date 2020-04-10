@@ -6,6 +6,7 @@ import {
   GET_PRODUCTS_BY_ARRIVAL,
   GET_BRANDS,
   GET_WOODS,
+  GET_PRODUCTS_TO_SHOP,
 } from "./types";
 
 //GET http://localhost:3002/api/product/articles?sortBy=sold&order=desc&limit=4
@@ -56,5 +57,32 @@ export function getWoods() {
   return {
     type: GET_WOODS,
     payload: woodsRequest,
+  };
+}
+
+export function getProductsToShop(
+  skip,
+  limit,
+  filters = [],
+  previousState = []
+) {
+  const paramsData = {
+    skip,
+    limit,
+    filters,
+  };
+
+  const prodRequest = axios
+    .post(`${PRODUCT_SERVER}/shop`, paramsData)
+    .then((response) => {
+      return {
+        size: response.data.size,
+        articles: response.data.articles,
+      };
+    });
+
+  return {
+    type: GET_PRODUCTS_TO_SHOP,
+    payload: prodRequest,
   };
 }
