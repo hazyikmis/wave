@@ -34,6 +34,46 @@ export const FormField = ({ formFieldData, change, id }) => {
           </div>
         );
         break;
+      case "textarea":
+        formTemplate = (
+          <div className="formBlock">
+            {formFieldData.showLabel ? (
+              <div className="label_inputs">{formFieldData.config.label}</div>
+            ) : null}
+
+            <textarea
+              {...formFieldData.config}
+              value={formFieldData.value}
+              onBlur={(event) => change({ event, id, blur: true })}
+              onChange={(event) => change({ event, id })}
+            />
+            {showError()}
+          </div>
+        );
+        break;
+      case "select":
+        formTemplate = (
+          <div className="formBlock">
+            {formFieldData.showLabel ? (
+              <div className="label_inputs">{formFieldData.config.label}</div>
+            ) : null}
+
+            <select
+              value={formFieldData.value}
+              onBlur={(event) => change({ event, id, blur: true })}
+              onChange={(event) => change({ event, id })}
+            >
+              <option value="">Select one</option>
+              {formFieldData.config.options.map((option) => (
+                <option key={option.key} value={option.key}>
+                  {option.value}
+                </option>
+              ))}
+            </select>
+            {showError()}
+          </div>
+        );
+        break;
       default:
         formTemplate = null;
     }
