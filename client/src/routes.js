@@ -11,6 +11,7 @@ import Register from "./components/Register_Login/register";
 import { UserDashboard } from "./components/User";
 
 import Shop from "./components/Shop";
+import AddProduct from "./components/User/Admin/add_product";
 
 //for private routes Auth(ComponentName, true)
 //for in-between routes Auth(ComponentName, false)
@@ -24,6 +25,11 @@ const Routes = () => {
           path="/user/dashboard"
           exact
           component={Auth(UserDashboard, true)}
+        />
+        <Route
+          path="/admin/add_product"
+          exact
+          component={Auth(AddProduct, true)}
         />
 
         <Route path="/register" exact component={Auth(Register, false)} />

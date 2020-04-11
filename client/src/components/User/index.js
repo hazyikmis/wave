@@ -1,5 +1,5 @@
 import React from "react";
-import { UserLayout } from "../../hoc/user_layout";
+import UserLayout from "../../hoc/user_layout";
 import { GenericButton } from "../utils/buttons";
 
 export const UserDashboard = ({ user }) => {

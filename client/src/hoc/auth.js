@@ -14,7 +14,6 @@ export default function (ComposedClass, reload, adminRoute = null) {
     };
 
     componentDidMount() {
-      console.log("xxx");
       this.props.dispatch(auth()).then((response) => {
         let user = this.props.user.userData;
 

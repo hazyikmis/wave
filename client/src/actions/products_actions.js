@@ -66,6 +66,8 @@ export function getProductsToShop(
   filters = [],
   previousState = []
 ) {
+  //previousState is not a complete state, just a list of articles (products)
+
   const paramsData = {
     skip,
     limit,
@@ -75,9 +77,12 @@ export function getProductsToShop(
   const prodRequest = axios
     .post(`${PRODUCT_SERVER}/shop`, paramsData)
     .then((response) => {
+      let newState = [...previousState, ...response.data.articles];
+
       return {
         size: response.data.size,
-        articles: response.data.articles,
+        //articles: response.data.articles,
+        articles: newState,
       };
     });
 

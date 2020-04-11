@@ -14,6 +14,12 @@ import { frets, prices } from "../utils/Form/fixed_categories";
 
 import CollapsableRadioButtonList from "../utils/collapse_radio";
 
+import { LoadmoreCarts } from "./loadmoreCarts";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import faBars from "@fortawesome/fontawesome-free-solid/faBars";
+import faTh from "@fortawesome/fontawesome-free-solid/faTh";
+
 class Shop extends Component {
   state = {
     grid: "",
@@ -78,6 +84,31 @@ class Shop extends Component {
     //put console.log(this.state) just at the beginning of render function
   };
 
+  loadMoreCarts = () => {
+    let skip = this.state.skip + this.state.limit;
+
+    this.props
+      .dispatch(
+        getProductsToShop(
+          skip,
+          this.state.limit,
+          this.state.filters,
+          this.props.products.toShop
+        )
+      )
+      .then(() => {
+        this.setState({
+          skip,
+        });
+      });
+  };
+
+  handleGrid = () => {
+    this.setState({
+      grid: !this.state.grid ? "grid_bars" : "",
+    });
+  };
+
   render() {
     //console.log(this.state.filters);
 
@@ -121,7 +152,33 @@ class Shop extends Component {
                 }
               />
             </div>
-            <div className="right">right</div>
+            <div className="right">
+              <div className="shop_options">
+                <div className="shop_grids clear">
+                  <div
+                    className={`grid_btn ${this.state.grid ? "" : "active"}`}
+                    onClick={() => this.handleGrid()}
+                  >
+                    <FontAwesomeIcon icon={faTh} />
+                  </div>
+                  <div
+                    className={`grid_btn ${!this.state.grid ? "" : "active"}`}
+                    onClick={() => this.handleGrid()}
+                  >
+                    <FontAwesomeIcon icon={faBars} />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <LoadmoreCarts
+                  grid={this.state.grid}
+                  limit={this.state.limit}
+                  size={products.toShopSize}
+                  products={products.toShop}
+                  loadMore={() => this.loadMoreCarts()}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
