@@ -7,6 +7,8 @@ import {
   GET_BRANDS,
   GET_WOODS,
   GET_PRODUCTS_TO_SHOP,
+  ADD_PRODUCT,
+  CLEAR_PRODUCT,
 } from "./types";
 
 //GET http://localhost:3002/api/product/articles?sortBy=sold&order=desc&limit=4
@@ -89,5 +91,26 @@ export function getProductsToShop(
   return {
     type: GET_PRODUCTS_TO_SHOP,
     payload: prodRequest,
+  };
+}
+
+export function addProduct(dataToSubmit) {
+  const req = axios
+    .post(`${PRODUCT_SERVER}/article`, dataToSubmit)
+    .then((response) => response.data);
+
+  return {
+    type: ADD_PRODUCT,
+    payload: req,
+  };
+}
+
+//this function used fro clearing redux store...
+//becasue, after adding the products, the information of newly added product still lives there
+//sometimes this cluld be useful! but here we are clearing it
+export function clearProduct() {
+  return {
+    type: CLEAR_PRODUCT,
+    payload: "",
   };
 }

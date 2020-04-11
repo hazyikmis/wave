@@ -7,10 +7,16 @@ import {
   generateData,
   isFormValid,
   populateOptionFields,
+  resetFields,
 } from "../../utils/Form/formActions";
 
 import { connect } from "react-redux";
-import { getBrands, getWoods } from "../../../actions/products_actions";
+import {
+  getBrands,
+  getWoods,
+  addProduct,
+  clearProduct,
+} from "../../../actions/products_actions";
 
 class AddProduct extends Component {
   state = {
@@ -148,7 +154,7 @@ class AddProduct extends Component {
           options: [
             { key: 20, value: 20 },
             { key: 21, value: 21 },
-            { key: 22, value: 24 },
+            { key: 22, value: 22 },
             { key: 24, value: 24 },
           ],
         },
@@ -222,6 +228,28 @@ class AddProduct extends Component {
     });
   };
 
+  resetFieldsHandler = () => {
+    const newFormData = resetFields(this.state.formdata, "products");
+    this.setState({
+      formError: false,
+      formSuccess: true,
+      formdata: newFormData,
+    });
+    //to show 3 seconds success message and to remove it
+    setTimeout(() => {
+      this.setState(
+        {
+          formSuccess: false,
+        },
+        () => {
+          //no need to keep newly added product info into the state
+          //so we are removing this info from redux state
+          this.props.dispatch(clearProduct());
+        }
+      );
+    }, 3000);
+  };
+
   submitForm = (event) => {
     event.preventDefault();
 
@@ -229,32 +257,23 @@ class AddProduct extends Component {
 
     if (formIsValid) {
       let dataToSubmit = generateData(this.state.formdata, "products");
-      console.log(dataToSubmit);
-      // this.props
-      //   .dispatch(registerUser(dataToSubmit))
-      //   .then((response) => {
-      //     console.log(response.payload);
-      //     if (response.payload.registerSuccess) {
-      //       //console.log(response.payload);
-      //       this.setState({
-      //         formError: false,
-      //         formSuccess: true,
-      //       });
-
-      //       setTimeout(() => {
-      //         this.props.history.push("/register_login");
-      //       }, 3000);
-      //     } else {
-      //       this.setState({
-      //         formError: true,
-      //       });
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     this.setState({
-      //       formError: true,
-      //     });
-      //   });
+      //console.log(dataToSubmit);
+      this.props
+        .dispatch(addProduct(dataToSubmit))
+        .then(() => {
+          if (this.props.products.addProduct.success) {
+            this.resetFieldsHandler();
+          } else {
+            this.setState({
+              formError: true,
+            });
+          }
+        })
+        .catch((err) => {
+          this.setState({
+            formError: true,
+          });
+        });
     } else {
       this.setState({
         formError: true,
