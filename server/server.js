@@ -2,6 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
+//like body-parser, if we have file in the request, formidable helps us to parse this file
+const formidable = require("express-formidable");
+
+//that's not enough, also config required, check below...
+const cloudinary = require("cloudinary");
+
 const app = express();
 const mongoose = require("mongoose");
 require("dotenv").config();
@@ -16,6 +22,12 @@ mongoose.connect(process.env.DATABASE, {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDNRY_NAME,
+  api_key: process.env.CLOUDNRY_API_KEY,
+  api_secret: process.env.CLOUDNRY_API_SECRET,
+});
 
 // Models
 const { User } = require("./models/user");
@@ -102,6 +114,35 @@ app.get("/api/users/logout", auth, (req, res) => {
       return res.status(200).send({ success: true });
     }
   );
+});
+
+app.post("/api/users/uploadimage", auth, admin, formidable(), (req, res) => {
+  //cloudinary.uploader.upload(file, callback, config)
+  cloudinary.uploader.upload(
+    req.files.file.path,
+    (result) => {
+      console.log(result);
+      res.status(200).send({
+        public_id: result.public_id,
+        url: result.url,
+      });
+    },
+    {
+      public_id: `${Date.now()}`,
+      resource_type: "auto",
+    }
+  );
+});
+
+app.get("/api/users/removeimage", auth, admin, (req, res) => {
+  let public_id = req.query.public_id;
+
+  cloudinary.v2.uploader.destroy(public_id, (error, result) => {
+    //console.log("result:", result);
+    //console.log("error:", error);
+    if (error) return res.status(500).json({ success: false });
+    res.status(200).send("ok");
+  });
 });
 
 //============================
