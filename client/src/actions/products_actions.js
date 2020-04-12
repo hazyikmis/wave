@@ -9,6 +9,8 @@ import {
   GET_PRODUCTS_TO_SHOP,
   ADD_PRODUCT,
   CLEAR_PRODUCT,
+  ADD_BRAND,
+  ADD_WOOD,
 } from "./types";
 
 //GET http://localhost:3002/api/product/articles?sortBy=sold&order=desc&limit=4
@@ -112,5 +114,43 @@ export function clearProduct() {
   return {
     type: CLEAR_PRODUCT,
     payload: "",
+  };
+}
+
+//after inserting one brand, we are returning all brands
+//but in the server route, it returns just the newly added brand
+//we might change the server route, thats possible. Bu we preferrred to return all brands here
+export function addBrand(dataToSubmit, existingBrands) {
+  const req = axios
+    .post(`${PRODUCT_SERVER}/brand`, dataToSubmit)
+    .then((response) => {
+      let brands = [...existingBrands, response.data.brand];
+      return {
+        success: response.data.success,
+        brands,
+      };
+    });
+
+  return {
+    type: ADD_BRAND,
+    payload: req,
+  };
+}
+
+//same as addBrand
+export function addWood(dataToSubmit, existingWoods) {
+  const req = axios
+    .post(`${PRODUCT_SERVER}/wood`, dataToSubmit)
+    .then((response) => {
+      let woods = [...existingWoods, response.data.wood];
+      return {
+        success: response.data.success,
+        woods,
+      };
+    });
+
+  return {
+    type: ADD_WOOD,
+    payload: req,
   };
 }

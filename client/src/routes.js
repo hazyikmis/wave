@@ -12,6 +12,7 @@ import { UserDashboard } from "./components/User";
 
 import Shop from "./components/Shop";
 import AddProduct from "./components/User/Admin/add_product";
+import { ManageCategories } from "./components/User/Admin/manage_categories";
 
 //for private routes Auth(ComponentName, true)
 //for in-between routes Auth(ComponentName, false)
@@ -30,6 +31,11 @@ const Routes = () => {
           path="/admin/add_product"
           exact
           component={Auth(AddProduct, true)}
+        />
+        <Route
+          path="/admin/manage_categories"
+          exact
+          component={Auth(ManageCategories, true)}
         />
 
         <Route path="/register" exact component={Auth(Register, false)} />

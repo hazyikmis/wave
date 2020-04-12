@@ -140,7 +140,8 @@ app.get("/api/users/removeimage", auth, admin, (req, res) => {
   cloudinary.v2.uploader.destroy(public_id, (error, result) => {
     //console.log("result:", result);
     //console.log("error:", error);
-    if (error) return res.status(500).json({ success: false });
+    //if (error) return res.status(500).json({ success: false });
+    if (error) return res.json({ success: false, error });
     res.status(200).send("ok");
   });
 });
@@ -179,7 +180,7 @@ app.post("/api/product/wood", auth, admin, (req, res) => {
     if (err) return res.json({ success: false, err });
     res.status(200).json({
       success: true,
-      brand: newWood,
+      wood: newWood,
     });
   });
 });
