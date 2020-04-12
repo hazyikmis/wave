@@ -12,6 +12,9 @@ import {
 
 import { ProdInfo } from "./prodInfo";
 
+import ProdImg from "./prodImg";
+import prodImg from "./prodImg";
+
 class ProductPage extends Component {
   componentDidMount() {
     const id = this.props.match.params.id;
@@ -31,7 +34,11 @@ class ProductPage extends Component {
         <div className="container">
           {this.props.products.prodDetail ? (
             <div className="product_detail_wrapper">
-              <div className="left">images</div>
+              <div className="left">
+                <div style={{ width: "500px" }}>
+                  <ProdImg detail={this.props.products.prodDetail} />
+                </div>
+              </div>
               <div className="right">
                 <ProdInfo
                   addToCart={(id) => this.addToCartHandler(id)}
