@@ -11,6 +11,8 @@ import {
   CLEAR_PRODUCT,
   ADD_BRAND,
   ADD_WOOD,
+  GET_PRODUCT_DETAIL,
+  CLEAR_PRODUCT_DETAIL,
 } from "./types";
 
 //GET http://localhost:3002/api/product/articles?sortBy=sold&order=desc&limit=4
@@ -152,5 +154,26 @@ export function addWood(dataToSubmit, existingWoods) {
   return {
     type: ADD_WOOD,
     payload: req,
+  };
+}
+
+export function getProductDetail(id) {
+  const prodReq = axios
+    .get(`${PRODUCT_SERVER}/articles_by_id?id=${id}&type=single`)
+    .then((response) => {
+      //console.log(response.data);
+      return response.data[0];
+    });
+
+  return {
+    type: GET_PRODUCT_DETAIL,
+    payload: prodReq,
+  };
+}
+
+export function clearProductDetail() {
+  return {
+    type: CLEAR_PRODUCT_DETAIL,
+    payload: "",
   };
 }

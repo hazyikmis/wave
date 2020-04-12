@@ -251,6 +251,7 @@ app.get("/api/product/articles_by_id", (req, res) => {
     .populate("wood")
     .exec((err, products) => {
       if (err) return res.status(400).send(err);
+      //console.log(products);
       return res.status(200).send(products);
     });
 });
