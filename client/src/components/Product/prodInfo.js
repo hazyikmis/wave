@@ -55,7 +55,8 @@ export const ProdInfo = (props) => {
         <GenericButton
           type="add_to_cart_link"
           runAction={() => {
-            console.log("add to cart");
+            //console.log("add to cart");
+            props.addToCart(detail._id);
           }}
         />
       </div>

@@ -17,6 +17,7 @@ mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
+  useFindAndModify: false,
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -294,6 +295,57 @@ app.post("/api/product/shop", (req, res) => {
         articles,
       });
     });
+});
+
+//============================
+//        CART
+//============================
+
+app.post("/api/users/addToCart", auth, (req, res) => {
+  User.findOne({ _id: req.user._id }, (err, userdoc) => {
+    let exist = false;
+
+    userdoc.cart.forEach((item) => {
+      if (item.id == req.query.productId) {
+        exist = true;
+      }
+    });
+
+    if (exist) {
+      /// increase (+1) the quantity of the item exist in the user.cart
+      User.findOneAndUpdate(
+        {
+          _id: req.user._id,
+          "cart.id": mongoose.Types.ObjectId(req.query.productId),
+        },
+        { $inc: { "cart.$.quantity": 1 } },
+        { new: true },
+        (err, docusr) => {
+          if (err) return res.json({ success: false, err });
+          res.status(200).json(docusr.cart);
+        }
+      );
+    } else {
+      /// add new item to user.cart (this also means that updating a user)
+      User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+          $push: {
+            cart: {
+              id: mongoose.Types.ObjectId(req.query.productId),
+              quantity: 1,
+              date: Date.now(),
+            },
+          },
+        },
+        { new: true },
+        (err, docusr) => {
+          if (err) return res.json({ success: false, err });
+          res.status(200).json(docusr.cart);
+        }
+      );
+    }
+  });
 });
 
 const port = process.env.SERVER_PORT || 3002;

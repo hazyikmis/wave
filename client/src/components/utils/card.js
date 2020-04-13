@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { GenericButton } from "./buttons";
 
-export default class Card extends Component {
+import { connect } from "react-redux";
+import { addToCart } from "../../actions/user_actions";
+
+class Card extends Component {
   renderCardImage(images) {
     if (images.length > 0) {
       return images[0].url;
     } else {
-      return "images/image_not_available.png";
+      return "/images/image_not_available.png";
     }
   }
 
@@ -48,7 +51,10 @@ export default class Card extends Component {
               <GenericButton
                 type="bag_link"
                 runAction={() => {
-                  console.log("added to cart");
+                  //console.log("added to cart");
+                  props.user.userData.isAuth
+                    ? this.props.dispatch(addToCart(props._id))
+                    : console.log("you need to log in");
                 }}
               />
             </div>
@@ -58,3 +64,13 @@ export default class Card extends Component {
     );
   }
 }
+
+//pupose of bringing "user" data come into play is to check user is authenticated or not
+//because "addToCart" action requires user authentication
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(Card);

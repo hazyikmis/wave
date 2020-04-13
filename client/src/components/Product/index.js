@@ -15,6 +15,8 @@ import { ProdInfo } from "./prodInfo";
 import ProdImg from "./prodImg";
 import prodImg from "./prodImg";
 
+import { addToCart } from "../../actions/user_actions";
+
 class ProductPage extends Component {
   componentDidMount() {
     const id = this.props.match.params.id;
@@ -36,6 +38,11 @@ class ProductPage extends Component {
   componentWillUnmount() {
     this.props.dispatch(clearProductDetail());
   }
+
+  addToCartHandler = (id) => {
+    //console.log(id);
+    this.props.dispatch(addToCart(id));
+  };
 
   render() {
     return (
