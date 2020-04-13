@@ -18,8 +18,18 @@ import prodImg from "./prodImg";
 class ProductPage extends Component {
   componentDidMount() {
     const id = this.props.match.params.id;
-    //console.log(id);
-    this.props.dispatch(getProductDetail(id));
+    console.log(id);
+    //this.props.dispatch(getProductDetail(id));
+    this.props.dispatch(getProductDetail(id)).then((response) => {
+      //console.log(this.props.products);
+      //SORRY BUT IF THE getProductDetail CANNOT FIND/GET THE PRODUCTS
+      //THE CODE NEVER ENTERS HERE... IT THROWS AN ERROR SOMEWHERE
+      //NOW, IT FIXED, ADDED AN CATCH BLOCK!
+      if (!this.props.products.prodDetail) {
+        //console.log("no articles found");
+        this.props.history.push("/"); //might be bettrer to redirect a "NOT FOUND PAGE"
+      }
+    });
   }
 
   //this method helps us to clear product from redux store

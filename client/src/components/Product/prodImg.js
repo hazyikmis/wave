@@ -1,6 +1,8 @@
 //class-based because we are going to use state
 import React, { Component } from "react";
 
+import ImageLightBox from "../utils/lightbox";
+
 export default class prodImg extends Component {
   state = {
     lightbox: false,
@@ -27,11 +29,24 @@ export default class prodImg extends Component {
     if (imgs.length > 0) {
       return imgs[0].url;
     } else {
-      return "images/image_not_available.png";
+      return "/images/image_not_available.png";
     }
   };
 
-  handleLightBox = (idx) => {};
+  handleLightBox = (pos) => {
+    if (this.state.lightboxImages.length > 0) {
+      this.setState({
+        lightbox: true,
+        imagePos: pos,
+      });
+    }
+  };
+
+  handleLightBoxClose = () => {
+    this.setState({
+      lightbox: false,
+    });
+  };
 
   showThumbs = () =>
     this.state.lightboxImages.map((img, i) =>
@@ -46,7 +61,7 @@ export default class prodImg extends Component {
     );
 
   render() {
-    console.log(this.state);
+    //console.log(this.state);
     const { detail } = this.props;
     return (
       <div className="product_image_container">
@@ -61,6 +76,15 @@ export default class prodImg extends Component {
           ></div>
         </div>
         <div className="main_thumbs">{this.showThumbs()}</div>
+        {this.state.lightbox ? (
+          <ImageLightBox
+            id={detail.id}
+            images={this.state.lightboxImages}
+            open={this.state.open}
+            pos={this.state.imagePos}
+            onClose={() => this.handleLightBoxClose()}
+          />
+        ) : null}
       </div>
     );
   }

@@ -28,7 +28,8 @@ export function registerUser(dataToSubmit) {
 export function auth() {
   const request = axios
     .get(`${USER_SERVER}/auth`)
-    .then((response) => response.data);
+    .then((response) => response.data)
+    .catch((err) => console.log("ERROR in auth user_action", err));
 
   return {
     type: AUTH_USER,

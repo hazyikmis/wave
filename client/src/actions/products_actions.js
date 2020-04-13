@@ -163,7 +163,10 @@ export function getProductDetail(id) {
     .then((response) => {
       //console.log(response.data);
       return response.data[0];
-    });
+    })
+    .catch((err) =>
+      console.log("ERROR in getProductDetail products_action", err)
+    );
 
   return {
     type: GET_PRODUCT_DETAIL,

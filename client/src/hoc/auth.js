@@ -19,7 +19,7 @@ export default function (ComposedClass, reload, adminRoute = null) {
 
         console.log(user);
 
-        if (!user.isAuth) {
+        if (!user || !user.isAuth) {
           if (reload) {
             this.props.history.push("/register_login");
           }
