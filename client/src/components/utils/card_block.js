@@ -4,11 +4,7 @@ import Card from "./card";
 export const CardBlock = (props) => {
   const renderCards = () =>
     props.listOfCards
-      ? props.listOfCards.map((card, i) => (
-          <div>
-            <Card key={i} {...card} />
-          </div>
-        ))
+      ? props.listOfCards.map((card, i) => <Card key={i} {...card} />)
       : null;
 
   return (
