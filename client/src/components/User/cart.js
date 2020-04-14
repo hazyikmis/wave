@@ -6,7 +6,7 @@ import React, { Component } from "react";
 import UserLayout from "../../hoc/user_layout";
 
 import { connect } from "react-redux";
-import { getCartItems } from "../../actions/user_actions";
+import { getCartItems, removeCartItem } from "../../actions/user_actions";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import faFrown from "@fortawesome/fontawesome-free-solid/faFrown";
@@ -22,6 +22,19 @@ class UserCart extends Component {
     showSuccess: false,
   };
 
+  calculateTotal = (cartDetail) => {
+    let total = 0;
+
+    cartDetail.forEach((item) => {
+      total += parseInt(item.price, 10) * item.quantity;
+    });
+
+    this.setState({
+      total,
+      showTotal: true,
+    });
+  };
+
   componentDidMount() {
     let cartProdIds = [];
     //in order to access "this.props" we used mapStateToProps
@@ -34,13 +47,40 @@ class UserCart extends Component {
           cartProdIds.push(item.id);
         });
 
-        this.props.dispatch(getCartItems(cartProdIds, cart));
-        //.then(() => {});
+        //this.props.dispatch(getCartItems(cartProdIds, cart));
+        this.props.dispatch(getCartItems(cartProdIds, cart)).then(() => {
+          let cartDetail = this.props.user.cartDetail;
+          if (cartDetail.length > 0) {
+            this.calculateTotal(cartDetail);
+          }
+        });
       }
     }
   }
 
-  removeFromCart = () => {};
+  removeFromCart = (id) => {
+    this.props.dispatch(removeCartItem(id)).then(() => {
+      if (this.props.user.cartDetail.length <= 0) {
+        this.setState({ showTotal: false });
+      } else {
+        this.calculateTotal(this.props.user.cartDetail);
+      }
+    });
+  };
+
+  showNoItemMessage = () => (
+    <div className="cart_no_items">
+      <FontAwesomeIcon icon={faFrown} />
+      <div>You have no items in your cart!</div>
+    </div>
+  );
+
+  showSuccessMessage = () => (
+    <div className="cart_no_items">
+      <FontAwesomeIcon icon={faSmile} />
+      <div>Thank you for your order...</div>
+    </div>
+  );
 
   //be careful:
   //strange... "users" send to UserProductBlock as "products"
@@ -55,7 +95,21 @@ class UserCart extends Component {
               type="cart"
               removeItem={(id) => this.removeFromCart(id)}
             />
+            {this.state.showTotal ? (
+              <div>
+                <div className="user_cart_sum">
+                  <div>Total amount: $ {this.state.total}</div>
+                </div>
+              </div>
+            ) : this.state.showSuccess ? (
+              this.showSuccessMessage()
+            ) : (
+              this.showNoItemMessage()
+            )}
           </div>
+          {this.state.showTotal ? (
+            <div className="paypal_button_container">Paypal</div>
+          ) : null}
         </div>
       </UserLayout>
     );

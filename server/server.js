@@ -348,6 +348,32 @@ app.post("/api/users/addToCart", auth, (req, res) => {
   });
 });
 
+app.get("/api/users/removeFromCart", auth, (req, res) => {
+  User.findOneAndUpdate(
+    { _id: req.user._id },
+    { $pull: { cart: { id: mongoose.Types.ObjectId(req.query._id) } } },
+    { new: true },
+    (err, docusr) => {
+      let cart = docusr.cart;
+      let cartItemIdsArr = cart.map((item) => {
+        return mongoose.Types.ObjectId(item.id);
+      });
+
+      //after deletion of one item from the cart, in order to render remaining items properly
+      //we are querying the database
+      Product.find({ _id: { $in: cartItemIdsArr } })
+        .populate("brand")
+        .populate("wood")
+        .exec((err, cartDetail) => {
+          return res.status(200).json({
+            cartDetail,
+            cart,
+          });
+        });
+    }
+  );
+});
+
 const port = process.env.SERVER_PORT || 3002;
 
 app.listen(port, () => {

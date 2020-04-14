@@ -105,12 +105,12 @@ class Header extends Component {
     return (
       <header className="bck_b_light">
         <div className="container">
-          <div className="left">
-            <div className="logo">WAVES</div>
-          </div>
           <div className="right">
             <div className="top">{this.showLinks(this.state.user)}</div>
             <div className="bottom">{this.showLinks(this.state.page)}</div>
+          </div>
+          <div className="left">
+            <div className="logo">WAVES</div>
           </div>
         </div>
       </header>
