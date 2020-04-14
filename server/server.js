@@ -10,6 +10,9 @@ const cloudinary = require("cloudinary");
 
 const app = express();
 const mongoose = require("mongoose");
+
+const async = require("async");
+
 require("dotenv").config();
 
 mongoose.Promise = global.Promise;
@@ -35,6 +38,7 @@ const { User } = require("./models/user");
 const { Brand } = require("./models/brand");
 const { Wood } = require("./models/wood");
 const { Product } = require("./models/product");
+const { Payment } = require("./models/payment");
 
 // Middlewares
 const { auth } = require("./middleware/auth");
@@ -370,6 +374,80 @@ app.get("/api/users/removeFromCart", auth, (req, res) => {
             cart,
           });
         });
+    }
+  );
+});
+
+app.post("/api/users/successBuy", auth, (req, res) => {
+  //some of the information about the products inside cartDetail will be stored inside the "history"
+  //and this will be used when storing purchases into the database (inside the user document history field)
+  //thats the reason why we gave the name "history"
+
+  //the second thing: we have 2 parameters (cartDetail & paymentData) attached to the req.body as you see below
+  let history = [];
+  let transactionData = {};
+
+  req.body.cartDetail.forEach((item) => {
+    history.push({
+      dateOfPurchase: Date.now(),
+      name: item.name,
+      brand: item.brand.name,
+      id: item._id,
+      price: item.price,
+      quantity: item.quantity,
+      paymentId: req.body.paymentData.paymentID,
+    });
+  });
+
+  transactionData.user = {
+    id: req.user._id,
+    name: req.user.name,
+    lastname: req.user.lastname,
+    email: req.user.email,
+  };
+
+  transactionData.data = req.body.paymentData;
+
+  transactionData.product = history;
+
+  User.findOneAndUpdate(
+    { _id: req.user._id },
+    { $push: { history: history }, $set: { cart: [] } },
+    { new: true },
+    (err, user) => {
+      if (err) return res.json({ success: false, err });
+
+      const payment = new Payment(transactionData);
+      payment.save((err, newPaymentDoc) => {
+        if (err) return res.json({ success: false, err });
+
+        let products = [];
+        newPaymentDoc.product.forEach((item) => {
+          products.push({ id: item.id, quantity: item.quantity });
+        });
+
+        //async.eachSeries(array, () => {/*update*/}, () => {/*what we gonna do after all updates*/})
+        async.eachSeries(
+          products,
+          (item, callback) => {
+            Product.update(
+              { _id: item.id },
+              { $inc: { sold: item.quantity } },
+              { new: false },
+              callback
+            );
+          },
+          (err) => {
+            if (err) return res.json({ success: false, err });
+            res.status(200).json({
+              success: true,
+              //cart: []
+              cart: user.cart, //user.cart is set to []
+              cartDetail: [],
+            });
+          }
+        );
+      });
     }
   );
 });

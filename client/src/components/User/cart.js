@@ -6,7 +6,11 @@ import React, { Component } from "react";
 import UserLayout from "../../hoc/user_layout";
 
 import { connect } from "react-redux";
-import { getCartItems, removeCartItem } from "../../actions/user_actions";
+import {
+  getCartItems,
+  removeCartItem,
+  onSuccessBuy,
+} from "../../actions/user_actions";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import faFrown from "@fortawesome/fontawesome-free-solid/faFrown";
@@ -94,10 +98,25 @@ class UserCart extends Component {
 
   transactionSuccess = (paymentData) => {
     //console.log(data);
-    this.setState({
-      showTotal: false,
-      showSuccess: true,
-    });
+
+    //since onSuccessBuy(data) function defined as accepting only one parameter "data" as you seen in the user_actions.js
+    //so, in order to send just one parameter we are packing cartDetail and cartDetail as a single object when sending/dispatching to the onSuccess user action
+    this.props
+      .dispatch(
+        onSuccessBuy({
+          cartDetail: this.props.user.cartDetail,
+          paymentData: paymentData,
+        })
+      )
+      .then(() => {
+        //successBuy comes from the ON_SUCCESS_BUY_USER user reducer
+        if (this.props.user.successBuy) {
+          this.setState({
+            showTotal: false,
+            showSuccess: true,
+          });
+        }
+      });
   };
 
   //be careful:
