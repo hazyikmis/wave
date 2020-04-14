@@ -16,6 +16,8 @@ import { ManageCategories } from "./components/User/Admin/manage_categories";
 
 import ProductPage from "./components/Product";
 
+import UserCart from "./components/User/cart";
+
 //for private routes Auth(ComponentName, true)
 //for in-between routes Auth(ComponentName, false)
 //fro public routes Auth(ComponentName, null)
@@ -24,6 +26,7 @@ const Routes = () => {
   return (
     <Layout>
       <Switch>
+        <Route path="/user/cart" exact component={Auth(UserCart, true)} />
         <Route
           path="/user/dashboard"
           exact
