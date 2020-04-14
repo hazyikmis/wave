@@ -14,6 +14,8 @@ import faSmile from "@fortawesome/fontawesome-free-solid/faSmile";
 
 import { UserProductBlock } from "../utils/User/product_block";
 
+import Paypal from "../utils/paypal";
+
 class UserCart extends Component {
   state = {
     loading: true,
@@ -82,6 +84,22 @@ class UserCart extends Component {
     </div>
   );
 
+  transactionError = (paymentData) => {
+    console.log("Paypal error!", paymentData);
+  };
+
+  transactionCanceled = (paymentData) => {
+    console.log("Transaction cancelled!", paymentData);
+  };
+
+  transactionSuccess = (paymentData) => {
+    //console.log(data);
+    this.setState({
+      showTotal: false,
+      showSuccess: true,
+    });
+  };
+
   //be careful:
   //strange... "users" send to UserProductBlock as "products"
   render() {
@@ -108,7 +126,14 @@ class UserCart extends Component {
             )}
           </div>
           {this.state.showTotal ? (
-            <div className="paypal_button_container">Paypal</div>
+            <div className="paypal_button_container">
+              <Paypal
+                toPay={this.state.total}
+                transactionError={(data) => this.transactionError(data)}
+                transactionCanceled={(data) => this.transactionCanceled(data)}
+                onSuccess={(data) => this.transactionSuccess(data)}
+              />
+            </div>
           ) : null}
         </div>
       </UserLayout>
