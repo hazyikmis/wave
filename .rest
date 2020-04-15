@@ -112,3 +112,8 @@ content-type: application/json
 GET http://localhost:3002/api/product/articles_by_id?id=5b2d3648ca6a03cd33af924c
 //GET http://localhost:3002/api/product/articles_by_id?type=single&id=5b2d3648ca6a03cd33af924c
 content-type: application/json
+
+###
+//GET SITE INFO
+GET http://localhost:3002/api/site/site_data
+content-type: application/json

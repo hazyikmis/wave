@@ -49,6 +49,11 @@ const Routes = () => {
           exact
           component={Auth(UpdateUserProfile, true)}
         />
+        <Route
+          path="/admin/site_info"
+          exact
+          component={Auth(ManageSite, true)}
+        />
 
         <Route
           path="/register_login"

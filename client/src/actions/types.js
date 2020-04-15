@@ -19,3 +19,5 @@ export const REMOVE_CART_ITEM_USER = "remove_cart_item_user";
 export const ON_SUCCESS_BUY_USER = "on_success_buy_user";
 export const UPDATE_PROFILE_USER = "update_profile_user";
 export const CLEAR_UPDATE_PROFILE_USER = "clear_update_profile_user";
+export const GET_SITE_DATA = "get_site_data";
+export const UPDATE_SITE_DATA = "update_site_data";
