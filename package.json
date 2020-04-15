@@ -10,7 +10,8 @@
     "client-start": "npm run start --prefix client",
     "client-start-dev": "npm run start --prefix client",
     "all-start": "concurrently \"npm run server-start\" \"npm run client-start\"",
-    "all-start-dev": "concurrently \"npm run server-start-dev\" \"npm run client-start-dev\""
+    "all-start-dev": "concurrently \"npm run server-start-dev\" \"npm run client-start-dev\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "engines": {
     "node": "12.3.0"
