@@ -27,6 +27,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+app.use(express.static("client/build"));
+
 cloudinary.config({
   cloud_name: process.env.CLOUDNRY_NAME,
   api_key: process.env.CLOUDNRY_API_KEY,
@@ -500,6 +502,17 @@ app.post("/api/site/site_data", auth, admin, (req, res) => {
     }
   );
 });
+
+//DEFAULT:
+if (process.env.NODE_ENV === "production") {
+  //means that we are inside heroku deployment
+  const path = require("path");
+  //accept all routes/requests and send response back to client
+  //if there is no match with the all routes above, all the rest falls here
+  app.get("/*", () => (req, res) => {
+    res.sendfile(path.resolve(__dirname, "../client", "build", "index.html"));
+  });
+}
 
 const port = process.env.SERVER_PORT || 3002;
 
