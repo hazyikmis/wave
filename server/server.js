@@ -49,7 +49,8 @@ const { Site } = require("./models/site");
 const { auth } = require("./middleware/auth");
 const { admin } = require("./middleware/admin");
 
-//nodemailer
+//the code below automatically sends an email when the servers runs
+//SENDING EMAIL - START
 const smtpTransport = mailer.createTransport({
   service: "Gmail",
   auth: {
@@ -74,6 +75,7 @@ smtpTransport.sendMail(mail, function (error, response) {
   }
   smtpTransport.close();
 });
+//SENDING EMAIL - END
 
 app.get("/", (req, res) => {
   res.send("Hello World");
