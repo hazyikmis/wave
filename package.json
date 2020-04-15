@@ -12,6 +12,9 @@
     "all-start": "concurrently \"npm run server-start\" \"npm run client-start\"",
     "all-start-dev": "concurrently \"npm run server-start-dev\" \"npm run client-start-dev\""
   },
+  "engines": {
+    "node": "12.3.0"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
