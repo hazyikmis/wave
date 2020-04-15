@@ -121,6 +121,27 @@ app.get("/api/users/logout", auth, (req, res) => {
   );
 });
 
+//req.body only contains {name:"...", lastname:"...", email:"..."}
+app.post("/api/users/update_profile", auth, (req, res) => {
+  User.findOneAndUpdate(
+    { _id: req.user._id },
+    {
+      $set: req.body,
+    },
+    { new: true },
+    (err, updUsr) => {
+      if (err) return res.json({ success: false, err });
+      return res.status(200).send({
+        success: true,
+      });
+    }
+  );
+});
+
+//============================
+//        CLOUDINARY IMAGE OPs
+//============================
+
 app.post("/api/users/uploadimage", auth, admin, formidable(), (req, res) => {
   //cloudinary.uploader.upload(file, callback, config)
   cloudinary.uploader.upload(

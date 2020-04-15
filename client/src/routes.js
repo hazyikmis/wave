@@ -17,6 +17,8 @@ import { ManageCategories } from "./components/User/Admin/manage_categories";
 import ProductPage from "./components/Product";
 
 import UserCart from "./components/User/cart";
+import { UpdateUserProfile } from "./components/User/update_profile";
+import { ManageSite } from "./components/User/Admin/manage_site";
 
 //for private routes Auth(ComponentName, true)
 //for in-between routes Auth(ComponentName, false)
@@ -42,6 +44,11 @@ const Routes = () => {
           exact
           component={Auth(ManageCategories, true)}
         />
+        <Route
+          path="/user/user_profile"
+          exact
+          component={Auth(UpdateUserProfile, true)}
+        />
 
         <Route
           path="/register_login"
@@ -49,12 +56,6 @@ const Routes = () => {
           component={Auth(RegisterLogin, false)}
         />
         <Route path="/register" exact component={Auth(Register, false)} />
-        <Route
-          path="/register_login"
-          exact
-          component={Auth(RegisterLogin, false)}
-        />
-
         <Route
           path="/product_detail/:id"
           exact
