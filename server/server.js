@@ -8,6 +8,8 @@ const formidable = require("express-formidable");
 //that's not enough, also config required, check below...
 const cloudinary = require("cloudinary");
 
+const mailer = require("nodemailer");
+
 const app = express();
 const mongoose = require("mongoose");
 
@@ -46,6 +48,32 @@ const { Site } = require("./models/site");
 // Middlewares
 const { auth } = require("./middleware/auth");
 const { admin } = require("./middleware/admin");
+
+//nodemailer
+const smtpTransport = mailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: process.env.GMUSR,
+    pass: process.env.GMPWD,
+  },
+});
+
+var mail = {
+  from: "Waves Guitars Inc <" + process.env.GMUSR + ">",
+  to: "hazyikmis@yahoo.com",
+  subject: "Send test email",
+  text: "Testing our app for sending emails...",
+  html: "<b>Hello guys this works!</>",
+};
+
+smtpTransport.sendMail(mail, function (error, response) {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("email sent");
+  }
+  smtpTransport.close();
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World");
