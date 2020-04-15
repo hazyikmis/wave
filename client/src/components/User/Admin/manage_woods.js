@@ -79,7 +79,7 @@ class ManageWoods extends Component {
     if (formIsValid) {
       let dataToSubmit = generateData(this.state.formdata, "woods");
       let existingWoods = this.props.products.woods;
-      console.log(dataToSubmit);
+      //console.log(dataToSubmit);
       this.props
         .dispatch(addWood(dataToSubmit, existingWoods))
         .then((response) => {

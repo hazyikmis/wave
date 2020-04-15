@@ -20,7 +20,7 @@ import { addToCart } from "../../actions/user_actions";
 class ProductPage extends Component {
   componentDidMount() {
     const id = this.props.match.params.id;
-    console.log(id);
+    //console.log(id);
     //this.props.dispatch(getProductDetail(id));
     this.props.dispatch(getProductDetail(id)).then((response) => {
       //console.log(this.props.products);

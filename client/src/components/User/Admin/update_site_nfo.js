@@ -108,7 +108,7 @@ class UpdateSiteNfo extends Component {
 
   componentDidMount() {
     this.props.dispatch(getSiteData()).then(() => {
-      console.log(this.props.site.siteData[0]);
+      //console.log(this.props.site.siteData[0]);
       const newFormData = populateFields(
         this.state.formdata,
         this.props.site.siteData[0]
@@ -134,7 +134,7 @@ class UpdateSiteNfo extends Component {
 
     if (formIsValid) {
       let dataToSubmit = generateData(this.state.formdata, "site_nfo");
-      console.log(dataToSubmit);
+      //console.log(dataToSubmit);
       this.props
         .dispatch(updateSiteData(dataToSubmit))
         .then((response) => {

@@ -79,7 +79,7 @@ class ManageBrands extends Component {
     if (formIsValid) {
       let dataToSubmit = generateData(this.state.formdata, "brands");
       let existingBrands = this.props.products.brands;
-      console.log(dataToSubmit);
+      //console.log(dataToSubmit);
       this.props
         .dispatch(addBrand(dataToSubmit, existingBrands))
         .then((response) => {

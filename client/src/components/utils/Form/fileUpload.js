@@ -33,7 +33,7 @@ export default class FileUpload extends Component {
     axios
       .post("/api/users/uploadimage", newFormData, config)
       .then((response) => {
-        console.log(response.data);
+        //console.log(response.data);
         this.setState(
           {
             uploading: false,

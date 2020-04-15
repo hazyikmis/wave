@@ -17,9 +17,9 @@ export default function (ComposedClass, reload, adminRoute = null) {
       this.props.dispatch(auth()).then((response) => {
         let user = this.props.user.userData;
 
-        console.log(user);
+        //console.log(user);
 
-        if (!user || !user.isAuth) {
+        if (!user.isAuth) {
           if (reload) {
             this.props.history.push("/register_login");
           }

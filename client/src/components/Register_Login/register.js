@@ -110,7 +110,7 @@ class Register extends Component {
       this.props
         .dispatch(registerUser(dataToSubmit))
         .then((response) => {
-          console.log(response.payload);
+          //console.log(response.payload);
           if (response.payload.registerSuccess) {
             //console.log(response.payload);
             this.setState({
