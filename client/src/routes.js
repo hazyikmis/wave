@@ -20,6 +20,8 @@ import UserCart from "./components/User/cart";
 import { UpdateUserProfile } from "./components/User/update_profile";
 import { ManageSite } from "./components/User/Admin/manage_site";
 
+import { PageNotFound } from "./components/utils/page_not_found";
+
 //for private routes Auth(ComponentName, true)
 //for in-between routes Auth(ComponentName, false)
 //fro public routes Auth(ComponentName, null)
@@ -68,6 +70,7 @@ const Routes = () => {
         <Route path="/register" exact component={Auth(Register, false)} />
         <Route path="/shop" exact component={Auth(Shop, null)} />
         <Route path="/" exact component={Auth(Home, null)} />
+        <Route component={Auth(PageNotFound)} />
       </Switch>
     </Layout>
   );
