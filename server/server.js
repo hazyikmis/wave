@@ -8,7 +8,7 @@ const formidable = require("express-formidable");
 //that's not enough, also config required, check below...
 const cloudinary = require("cloudinary");
 
-const mailer = require("nodemailer");
+//const mailer = require("nodemailer");
 
 const app = express();
 const mongoose = require("mongoose");
@@ -49,6 +49,8 @@ const { Site } = require("./models/site");
 const { auth } = require("./middleware/auth");
 const { admin } = require("./middleware/admin");
 
+/*
+//THE CODES BELOW - MOVED TO "utils/mail/index.js"
 //the code below automatically sends an email when the servers runs
 //SENDING EMAIL - START
 const smtpTransport = mailer.createTransport({
@@ -64,7 +66,7 @@ var mail = {
   to: "hazyikmis@yahoo.com",
   subject: "Send test email",
   text: "Testing our app for sending emails...",
-  html: "<b>Hello guys this works!</>",
+  html: "<b>Hello guys this works!</b>",
 };
 
 smtpTransport.sendMail(mail, function (error, response) {
@@ -76,6 +78,11 @@ smtpTransport.sendMail(mail, function (error, response) {
   smtpTransport.close();
 });
 //SENDING EMAIL - END
+*/
+
+//UTILS
+//sendEmail method is used in when a new user registered!
+const { sendEmail } = require("./utils/mail/index");
 
 app.get("/", (req, res) => {
   res.send("Hello World");
@@ -105,7 +112,17 @@ app.post("/api/users/register", (req, res) => {
   const user = new User(req.body);
 
   user.save((err, doc) => {
+    // if(err) return res.json({success:false,err});
+    // return res.status(200).json({
+    //     success: true
+    // });
     if (err) return res.json({ registerSuccess: false, err });
+
+    //we could define sendEmail() with callback as a last paramater
+    //and execute res.status(200)... inside this callback. We can chain
+    //commands by doing that...
+    sendEmail(doc.email, doc.name, null, "welcome");
+
     res.status(200).json({
       registerSuccess: true,
       userdata: doc,
