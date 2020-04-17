@@ -17,6 +17,8 @@ const mongoose = require("mongoose");
 
 const async = require("async");
 
+const moment = require("moment");
+
 require("dotenv").config();
 
 mongoose.Promise = global.Promise;
@@ -203,6 +205,49 @@ app.post("/api/users/update_profile", auth, (req, res) => {
 });
 
 //============================
+//        USER PASSWORD RESET
+//============================
+
+app.post("/api/users/reset_pwd", (req, res) => {
+  User.findOne({ email: req.body.email }, (err, user) => {
+    //console.log(user);
+    user.generateResetPwdToken((err, user) => {
+      if (err) return res.json({ success: false, err });
+      sendEmail(user.email, user.name, null, "reset_pwd", user);
+      return res.json({ success: true });
+    });
+  });
+});
+
+app.post("/api/users/reset_pwd_confirm", (req, res) => {
+  var today = moment().startOf("day").valueOf();
+  User.findOne(
+    {
+      resetToken: req.body.resetToken,
+      resetTokenExp: {
+        $gte: today,
+      },
+    },
+    (err, user) => {
+      if (!user)
+        return res.json({
+          success: false,
+          message:
+            "Sorry, token is expired or not found. Retry to reset your password!",
+        });
+      //BE CAREFUL, hashing automatically done in "presave" in User Schema
+      user.password = req.body.password;
+      user.resetToken = "";
+      user.resetTokenExp = "";
+      user.save((err, doc) => {
+        if (err) return res.json({ success: false, err });
+        return res.status(200).json({ success: true });
+      });
+    }
+  );
+});
+
+//============================
 //        CLOUDINARY IMAGE OPs
 //============================
 
@@ -283,7 +328,7 @@ const path = require("path");
 app.get("/api/users/admin_files", auth, admin, (req, res) => {
   const dir = path.resolve(".") + "/uploads/";
   fs.readdir(dir, (err, files) => {
-    console.log(files);
+    //console.log(files);
     return res.status(200).send(files);
   });
 });
@@ -294,7 +339,7 @@ app.get("/api/users/admin_files", auth, admin, (req, res) => {
 //NOT WORKS ON LOCAL!!!
 app.get("/api/users/download/:id", auth, admin, (req, res) => {
   const file = path.resolve(".") + "/uploads/" + req.params.id;
-  console.log(file);
+  //console.log(file);
   res.download(file);
 });
 

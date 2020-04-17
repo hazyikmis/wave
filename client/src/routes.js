@@ -23,6 +23,10 @@ import { ManageSite } from "./components/User/Admin/manage_site";
 import { PageNotFound } from "./components/utils/page_not_found";
 
 import AddFile from "./components/User/Admin/add_file";
+//the component below for entering your email and requesting rest pwd email
+import ResetPassword from "./components/Reset_password";
+//the component below for entering your new password when you clik the link in your reset pwd email
+import ResetPwd from "./components/Reset_password/reset_pwd";
 
 //for private routes Auth(ComponentName, true)
 //for in-between routes Auth(ComponentName, false)
@@ -69,6 +73,16 @@ const Routes = () => {
           path="/register_login"
           exact
           component={Auth(RegisterLogin, false)}
+        />
+        <Route
+          path="/reset_password"
+          exact
+          component={Auth(ResetPassword, false)}
+        />
+        <Route
+          path="/reset_password/:token"
+          exact
+          component={Auth(ResetPwd, false)}
         />
         <Route path="/register" exact component={Auth(Register, false)} />
         <Route path="/shop" exact component={Auth(Shop, null)} />

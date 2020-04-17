@@ -211,4 +211,6 @@ class Register extends Component {
   }
 }
 
+//BE CAREFUL! WE ARE CONNECTING THIS COMPONENT WITH REDUX, BUT JUST ONLY TO USE ACTIONS
+//SINCE WE DO NOT NEED ANYTHING FROM STATE/STORE, WE DO NOT NEED TO DEFINE mapStateToProps
 export default connect()(Register);
