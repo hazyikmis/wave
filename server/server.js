@@ -10,6 +10,8 @@ const cloudinary = require("cloudinary");
 
 //const mailer = require("nodemailer");
 
+const SHA1 = require("crypto-js/sha1");
+
 const app = express();
 const mongoose = require("mongoose");
 
@@ -83,6 +85,18 @@ smtpTransport.sendMail(mail, function (error, response) {
 //UTILS
 //sendEmail method is used in when a new user registered!
 const { sendEmail } = require("./utils/mail/index");
+
+//example of creating Purchase Order ID, using SHA1 (crypto-js)
+//this method used here moved to the successBuy route
+/*
+const date = new Date();
+const po = `PO-${date.getSeconds()}${date.getMilliseconds()}-${SHA1(
+  "20920398402938"
+)
+  .toString()
+  .substring(0, 10)}`;
+console.log(po); //>>> PO-21326-fddbfebd06
+*/
 
 app.get("/", (req, res) => {
   res.send("Hello World");
@@ -458,8 +472,16 @@ app.post("/api/users/successBuy", auth, (req, res) => {
   let history = [];
   let transactionData = {};
 
+  const date = new Date();
+  const po = `PO-${date.getSeconds()}${date.getMilliseconds()}-${SHA1(
+    req.user._id
+  )
+    .toString()
+    .substring(0, 10)}`;
+
   req.body.cartDetail.forEach((item) => {
     history.push({
+      porder: po,
       dateOfPurchase: Date.now(),
       name: item.name,
       brand: item.brand.name,
@@ -477,7 +499,8 @@ app.post("/api/users/successBuy", auth, (req, res) => {
     email: req.user.email,
   };
 
-  transactionData.data = req.body.paymentData;
+  //transactionData.data = req.body.paymentData;
+  transactionData.data = { ...req.body.paymentData, porder: po };
 
   transactionData.product = history;
 
@@ -510,6 +533,7 @@ app.post("/api/users/successBuy", auth, (req, res) => {
           },
           (err) => {
             if (err) return res.json({ success: false, err });
+            sendEmail(user.email, user.name, null, "purchase", transactionData);
             res.status(200).json({
               success: true,
               //cart: []

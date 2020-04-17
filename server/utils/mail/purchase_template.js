@@ -1,8 +1,38 @@
-<!DOCTYPE html>
-<html style="margin: 0; padding: 0;">
-  <head>
-    <title>One | Email template!</title>
-  </head>
+const purchase = (data) => {
+  const getPurchasedItems = () => {
+    let template = "";
+
+    data.product.forEach((item) => {
+      template += `
+        <div
+          style="
+            font-family: Helvetica, Arial, sans-serif;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+            margin: 0;
+            padding: 15px 25px;
+            text-transform: uppercase;
+          "
+        >
+        <h3>
+          ${item.brand} ${item.name}
+        </h3>
+        <p>Price paid: $ ${item.price}</p>
+        <p>Quantity: ${item.quantity}</p>
+        <p>Purchase order: ${item.porder}</p>
+      </div>
+      `;
+    });
+
+    return template;
+  };
+
+  return `
+  <!DOCTYPE html>
+  <html style="margin: 0; padding: 0;">
+    <head>
+      <title>One | Email template!</title>
+    </head>
 
   <body style="margin: 0; padding: 0;">
     <table
@@ -32,28 +62,29 @@
               text-transform: uppercase;
             "
           >
-            Welcome to waves
+          Thank you for buying...
           </h1>
         </td>
       </tr>
       <tr>
         <td style="margin: 0 auto;">
-          <a
-            href="/"
+          <h2
             style="
               box-sizing: border-box;
-              color: #999592 !important;
-              font-family: Arial, Helvetica, sans-serif;
+              color: #000000;
+              font-family: Helvetica, Arial, sans-serif;
+              letter-spacing: 0.5px;
               line-height: 1.4;
               margin: 0;
-              text-decoration: none;
+              padding: 15px 25px;
+              text-align: center;
+              text-transform: uppercase;
             "
-            ><img
-              class="full-width"
-              src="https://media.giphy.com/media/RIm19GefKk3kY/giphy.gif"
-              style="vertical-align: sub; width: 100%;"
-          /></a>
-        </td>
+          >
+            Your purchase information
+          </h2>
+          ${getPurchasedItems()}
+          </td>
       </tr>
       <tr>
         <td style="background-color: #999592; margin: 0 auto;">
@@ -80,4 +111,8 @@
       </tr>
     </table>
   </body>
-</html>
+  </html>
+  `;
+};
+
+module.exports = { purchase };
