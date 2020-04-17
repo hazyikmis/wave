@@ -237,6 +237,68 @@ app.get("/api/users/removeimage", auth, admin, (req, res) => {
 });
 
 //============================
+//        UPLOAD FILES (onto the local server disk, not cloudinary)
+//============================
+
+// "uploads/" folder should be created and be ready and should be at the
+// same level with server & client app folders
+
+const multer = require("multer");
+
+//multer.diskStorage({destination: function, filename: function, fileFilter: function})
+let storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+  // fileFilter: (req, file, cb) => {
+  //   const ext = path.extname(file.originalname);
+  //   console.log(ext);
+  //   if (ext !== ".jpg" && ext !== ".png") {
+  //     return cb(res.status(400).end("Only jpg and png is allowed"), false);
+  //   }
+  //   cb(null, true);
+  // },
+});
+
+const upload = multer({ storage: storage }).single("file");
+
+app.post("/api/users/uploadfile", auth, admin, (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      return res.json({ success: false, err });
+    }
+    return res.json({ success: true });
+  });
+});
+
+//============================
+//        LIST UPLOADED FILES
+//============================
+const fs = require("fs");
+const path = require("path");
+
+app.get("/api/users/admin_files", auth, admin, (req, res) => {
+  const dir = path.resolve(".") + "/uploads/";
+  fs.readdir(dir, (err, files) => {
+    console.log(files);
+    return res.status(200).send(files);
+  });
+});
+
+//============================
+//        DOWNLOAD FILES FROM SERVER
+//============================
+//NOT WORKS ON LOCAL!!!
+app.get("/api/users/download/:id", auth, admin, (req, res) => {
+  const file = path.resolve(".") + "/uploads/" + req.params.id;
+  console.log(file);
+  res.download(file);
+});
+
+//============================
 //        BRAND
 //============================
 

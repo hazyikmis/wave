@@ -22,6 +22,8 @@ import { ManageSite } from "./components/User/Admin/manage_site";
 
 import { PageNotFound } from "./components/utils/page_not_found";
 
+import AddFile from "./components/User/Admin/add_file";
+
 //for private routes Auth(ComponentName, true)
 //for in-between routes Auth(ComponentName, false)
 //fro public routes Auth(ComponentName, null)
@@ -56,6 +58,7 @@ const Routes = () => {
           exact
           component={Auth(ManageSite, true)}
         />
+        <Route path="/admin/add_file" exact component={Auth(AddFile, true)} />
 
         <Route
           path="/product_detail/:id"
